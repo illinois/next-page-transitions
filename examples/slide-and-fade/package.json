@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "next dev"
+  },
+  "dependencies": {
+    "next": "^6.0.2",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2"
+  }
+}
