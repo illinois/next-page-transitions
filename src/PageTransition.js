@@ -112,8 +112,8 @@ class PageTransition extends React.Component {
         })
       }
     } else if (prevState.showLoading && !this.state.showLoading) {
-      // We hid the loading indicator that that change has been flushed to
-      // the DOM; we can now bring in the next component!
+      // We hid the loading indicator; now that that change has been flushed to
+      // the DOM, we can now bring in the next component!
       this.setState({
         isIn: true,
       })
@@ -177,13 +177,19 @@ class PageTransition extends React.Component {
   render() {
     const { renderedChildren: children, state } = this.state
     const { timeout, loadingComponent } = this.props
-    if (this.state.state === 'entering' || this.state.state === 'exiting') {
+    if (
+      this.state.state === 'entering' ||
+      this.state.state === 'exiting' ||
+      this.state.state === 'exited'
+    ) {
       // Need to reflow!
       // eslint-disable-next-line no-unused-expressions
       if (document.body) document.body.scrollTop
     }
 
     const hasLoadingComponent = !!loadingComponent
+
+    const containerClassName = buildClassName(this.props.classNames, state)
 
     return (
       <Fragment>
@@ -198,14 +204,14 @@ class PageTransition extends React.Component {
           onExiting={() => this.onExiting()}
           onExited={() => this.onExited()}
         >
-          <div className={buildClassName(this.props.classNames, state)}>
+          <div className={containerClassName}>
             {children &&
               React.cloneElement(children, {
                 onReadyToEnter: () => this.onChildLoaded(),
               })}
           </div>
         </Transition>
-        {hasLoadingComponent &&
+        {hasLoadingComponent && (
           <CSSTransition
             in={this.state.showLoading}
             mountOnEnter
@@ -216,7 +222,7 @@ class PageTransition extends React.Component {
           >
             {loadingComponent}
           </CSSTransition>
-        }
+        )}
       </Fragment>
     )
   }
