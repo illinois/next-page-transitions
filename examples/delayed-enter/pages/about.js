@@ -14,7 +14,7 @@ class About extends React.Component {
 
   componentDidMount() {
     this.timeoutId = setTimeout(() => {
-      this.props.onLoaded()
+      this.props.onReadyToEnter()
       this.setState({ loaded: true })
     }, 2000)
   }
@@ -42,7 +42,11 @@ class About extends React.Component {
 }
 
 About.propTypes = {
-  onLoaded: PropTypes.func.isRequired,
+  onReadyToEnter: PropTypes.func,
+}
+
+About.defaultProps = {
+  onReadyToEnter: () => {},
 }
 
 export default About

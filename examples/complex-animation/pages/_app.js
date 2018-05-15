@@ -17,10 +17,7 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props
     return (
       <Container>
-        <PageTransition
-          timeout={500}
-          classNames="fade"
-        >
+        <PageTransition timeout={500} classNames="fade">
           <Component {...pageProps} />
         </PageTransition>
         <style jsx global>{`

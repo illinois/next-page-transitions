@@ -56,9 +56,7 @@ class PageTransition extends React.Component {
       currentChildren: children,
       nextChildren: null,
       renderedChildren: children,
-      /* We start with this so that the indicator will be shown when this page
-      is SSRed */
-      showLoading: true,
+      showLoading: false,
     }
   }
 
@@ -173,7 +171,7 @@ class PageTransition extends React.Component {
       this.setState({
         showLoading: true,
       })
-    }, 500)
+    }, this.props.loadingDelay)
   }
 
   render() {
@@ -203,21 +201,22 @@ class PageTransition extends React.Component {
           <div className={buildClassName(this.props.classNames, state)}>
             {children &&
               React.cloneElement(children, {
-                onLoaded: () => this.onChildLoaded(),
+                onReadyToEnter: () => this.onChildLoaded(),
               })}
           </div>
         </Transition>
-        {hasLoadingComponent && (
+        {hasLoadingComponent &&
           <CSSTransition
             in={this.state.showLoading}
             mountOnEnter
             unmountOnExit
+            appear
             classNames={this.props.loadingClassNames}
             timeout={this.props.loadingTimeout}
           >
             {loadingComponent}
           </CSSTransition>
-        )}
+        }
       </Fragment>
     )
   }
@@ -228,15 +227,16 @@ PageTransition.propTypes = {
   timeout: timeoutsShape,
   classNames: PropTypes.string.isRequired,
   loadingComponent: PropTypes.element,
+  loadingDelay: PropTypes.number,
   /* eslint-disable react/require-default-props */
   loadingTimeout: (props, ...args) => {
-    const pt = timeoutsShape
-    if (props.loadingComponent) pt.isRequired = true
+    let pt = timeoutsShape
+    if (props.loadingComponent) pt = pt.isRequired
     return pt(props, ...args)
   },
   loadingClassNames: (props, ...args) => {
-    const pt = PropTypes.string
-    if (props.loadingComponent) pt.isRequired = true
+    let pt = PropTypes.string
+    if (props.loadingTimeout) pt = pt.isRequired
     return pt(props, ...args)
   },
   /* eslint-enable react/require-default-props */
@@ -245,6 +245,7 @@ PageTransition.propTypes = {
 PageTransition.defaultProps = {
   timeout: 300,
   loadingComponent: null,
+  loadingDelay: 500,
 }
 
 export default PageTransition

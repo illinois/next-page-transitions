@@ -22,9 +22,13 @@ export default class MyApp extends App {
         <PageTransition
           timeout={300}
           classNames="fade"
-          loadingComponent={Loader}
-          loadingTimeout={200}
-          loadingClassNames="indicator-fade"
+          loadingComponent={<Loader />}
+          loadingDelay={500}
+          loadingTimeout={{
+            enter: 400,
+            exit: 0,
+          }}
+          loadingClassNames="loading-indicator"
         >
           <Component {...pageProps} />
         </PageTransition>
@@ -45,13 +49,14 @@ export default class MyApp extends App {
             opacity: 0;
             transition: opacity 300ms;
           }
-          .indicator-fade-enter {
+          .loading-indicator-appear,
+          .loading-indicator-enter {
             opacity: 0;
           }
-          .indicator-fade-appear-active,
-          .indicator-fade-enter-active {
+          .loading-indicator-appear-active,
+          .loading-indicator-enter-active {
             opacity: 1;
-            transition: opacity 200ms;
+            transition: opacity 400ms;
           }
         `}</style>
       </Container>
