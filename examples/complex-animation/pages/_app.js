@@ -23,8 +23,8 @@ export default class MyApp extends App {
         <style jsx global>{`
           .fade-enter {
             transform-origin: center top;
-            opacity: 1;
-            transform: rotate3d(1, 0, 0, -20deg);
+            opacity: 0;
+            transform: rotate3d(1, 0, 0, -20deg) rotateZ(0) scale(1);
           }
           .fade-enter-active {
             opacity: 1;
@@ -33,11 +33,11 @@ export default class MyApp extends App {
           }
           .fade-exit {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1) ;
           }
           .fade-exit-active {
             opacity: 0;
-            transform: scale(0.7) rotateZ(20deg);
+            transform: scale(0.7) ;
             transition: opacity 500ms, transform 500ms;
           }
         `}</style>
