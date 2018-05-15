@@ -4,7 +4,9 @@
 /* eslint-disable react/no-did-mount-set-state */
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { Transition, CSSTransition } from 'react-transition-group'
+import Transition from 'react-transition-group/Transition'
+import CSSTransition from 'react-transition-group/CSSTransition'
+import { timeoutsShape } from 'react-transition-group/utils/PropTypes'
 
 function areChildrenDifferent(oldChildren, newChildren) {
   if (oldChildren === newChildren) return false
@@ -198,7 +200,7 @@ class PageTransition extends React.Component {
           onExiting={() => this.onExiting()}
           onExited={() => this.onExited()}
         >
-          <div className={buildClassName('fade', state)}>
+          <div className={buildClassName(this.props.classNames, state)}>
             {children &&
               React.cloneElement(children, {
                 onLoaded: () => this.onChildLoaded(),
@@ -210,11 +212,8 @@ class PageTransition extends React.Component {
             in={this.state.showLoading}
             mountOnEnter
             unmountOnExit
-            classNames="indicator-fade"
-            timeout={{
-              enter: 200,
-              exit: 0,
-            }}
+            classNames={this.props.loadingClassNames}
+            timeout={this.props.loadingTimeout}
           >
             {loadingComponent}
           </CSSTransition>
@@ -226,14 +225,21 @@ class PageTransition extends React.Component {
 
 PageTransition.propTypes = {
   children: PropTypes.node.isRequired,
-  timeout: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.shape({
-      enter: PropTypes.number,
-      exit: PropTypes.number,
-    }),
-  ]).isRequired,
+  timeout: timeoutsShape,
+  classNames: PropTypes.string.isRequired,
   loadingComponent: PropTypes.element,
+  /* eslint-disable react/require-default-props */
+  loadingTimeout: (props, ...args) => {
+    const pt = timeoutsShape
+    if (props.loadingComponent) pt.isRequired = true
+    return pt(props, ...args)
+  },
+  loadingClassNames: (props, ...args) => {
+    const pt = PropTypes.string
+    if (props.loadingComponent) pt.isRequired = true
+    return pt(props, ...args)
+  },
+  /* eslint-enable react/require-default-props */
 }
 
 PageTransition.defaultProps = {

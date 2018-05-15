@@ -21,6 +21,11 @@ export default class MyDocument extends Document {
             integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy"
             crossOrigin="anonymous"
           />
+          <style>{`
+          #__next {
+            perspective: 1000px;
+          }
+        `}</style>
         </Head>
         <body>
           <Main />

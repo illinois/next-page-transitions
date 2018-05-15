@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Link from 'next/link'
 
 class About extends React.Component {
@@ -38,6 +39,10 @@ class About extends React.Component {
       </div>
     )
   }
+}
+
+About.propTypes = {
+  onLoaded: PropTypes.func.isRequired,
 }
 
 export default About

@@ -1,19 +1,11 @@
-import App, { Container } from 'next/app'
 import React from 'react'
-import { PageTransition, animations } from 'next-page-transitions'
+import App, { Container } from 'next/app'
+import { PageTransition } from 'next-page-transitions'
 
 import Loader from '../components/Loader'
 
-const { fadeIn, fadeOut } = animations
-
-function a(t) {
-  return `.test {
-    opacity: ${t};
-  }`
-}
-
 export default class MyApp extends App {
-  static async getInitialProps({ Component, router, ctx }) {
+  static async getInitialProps({ Component, ctx }) {
     let pageProps = {}
 
     if (Component.getInitialProps) {
@@ -27,7 +19,13 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props
     return (
       <Container>
-        <PageTransition loadingComponent={Loader} timeout={300}>
+        <PageTransition
+          timeout={300}
+          classNames="fade"
+          loadingComponent={Loader}
+          loadingTimeout={200}
+          loadingClassNames="indicator-fade"
+        >
           <Component {...pageProps} />
         </PageTransition>
         <style jsx global>{`

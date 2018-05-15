@@ -2,12 +2,13 @@
   "name": "next-page-transitions",
   "version": "1.0.0",
   "description": "Simple and customizable page transitions for Next.js apps",
-  "main": "./dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "build": "npx webpack",
-    "build-dev": "npx webpack --mode=development",
+    "build": "rimraf lib && babel src --out-dir lib && cp README.md LICENSE ./lib",
     "prettier": "prettier --write \"src/**/*.js\" \"examples/**/*.js\"",
-    "prettier-diff": "prettier --list-different \"src/**/*.js\" \"examples/**/*.js\""
+    "prettier-diff": "prettier --list-different \"src/**/*.js\" \"examples/**/*.js\"",
+    "lint-js": "eslint --ext js src examples",
+    "fix-lint-js": "eslint --ext js . --fix"
   },
   "repository": {
     "type": "git",
@@ -20,23 +21,32 @@
   },
   "homepage": "https://github.com/nwalters512/next-page-transitions#readme",
   "dependencies": {
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "react-style-tag": "^2.0.1",
+    "prop-types": "^15.6.1",
     "react-transition-group": "^2.3.1"
   },
+  "peerDependencies": {
+    "react": ">=16.0.0",
+    "react-dom": ">=16.0.0"
+  },
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.46",
-    "@babel/preset-env": "^7.0.0-beta.46",
-    "@babel/preset-react": "^7.0.0-beta.46",
-    "babel-loader": "^8.0.0-beta.2",
+    "@babel/cli": "7.0.0-beta.42",
+    "@babel/core": "7.0.0-beta.42",
+    "@babel/preset-env": "7.0.0-beta.42",
+    "@babel/preset-react": "7.0.0-beta.42",
+    "babel-eslint": "^8.2.3",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-jsx": "0.0.2",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.8.2",
     "husky": "^0.14.3",
-    "next": "^6.0.2",
     "prettier": "^1.12.1",
     "pretty-quick": "^1.4.1",
-    "styled-jsx": "^2.2.6",
-    "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.3"
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "rimraf": "^2.6.2"
   },
   "husky": {
     "hooks": {
