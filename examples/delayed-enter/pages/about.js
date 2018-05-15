@@ -7,7 +7,7 @@ class About extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loaded: false
+      loaded: false,
     }
   }
 
@@ -25,15 +25,14 @@ class About extends React.Component {
   render() {
     if (!this.state.loaded) return null
     return (
-      <div className="page">
+      <div className="container-fluid bg-success page">
         <h1>About us</h1>
         <Link href="/">
-          <a>Go back home</a>
+          <a className="btn btn-light">Go back home</a>
         </Link>
         <style jsx>{`
           .page {
-            background: red;
-            height: 90vh;
+            height: 100vh;
           }
         `}</style>
       </div>

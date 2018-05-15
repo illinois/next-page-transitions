@@ -6,8 +6,6 @@ import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Transition, CSSTransition } from 'react-transition-group'
 
-import Loading from './Loading'
-
 function areChildrenDifferent(oldChildren, newChildren) {
   if (oldChildren === newChildren) return false
   if (
@@ -178,12 +176,14 @@ class PageTransition extends React.Component {
 
   render() {
     const { renderedChildren: children, state } = this.state
-    const { timeout } = this.props
+    const { timeout, loadingComponent } = this.props
     if (this.state.state === 'entering' || this.state.state === 'exiting') {
       // Need to reflow!
       // eslint-disable-next-line no-unused-expressions
       if (document.body) document.body.scrollTop
     }
+
+    const hasLoadingComponent = !!loadingComponent
 
     return (
       <Fragment>
@@ -205,29 +205,20 @@ class PageTransition extends React.Component {
               })}
           </div>
         </Transition>
-        <CSSTransition
-          in={this.state.showLoading}
-          mountOnEnter
-          unmountOnExit
-          classNames="indicator-fade"
-          timeout={{
-            enter: 200,
-            exit: 0,
-          }}
-        >
-          <Loading />
-        </CSSTransition>
-        <style jsx global>{`
-          .indicator-fade-appear,
-          .indicator-fade-enter {
-            opacity: 0;
-          }
-          .indicator-fade-appear-active,
-          .indicator-fade-enter-active {
-            opacity: 1;
-            transition: opacity 200ms;
-          }
-        `}</style>
+        {hasLoadingComponent && (
+          <CSSTransition
+            in={this.state.showLoading}
+            mountOnEnter
+            unmountOnExit
+            classNames="indicator-fade"
+            timeout={{
+              enter: 200,
+              exit: 0,
+            }}
+          >
+            {loadingComponent}
+          </CSSTransition>
+        )}
       </Fragment>
     )
   }
@@ -235,11 +226,19 @@ class PageTransition extends React.Component {
 
 PageTransition.propTypes = {
   children: PropTypes.node.isRequired,
-  timeout: PropTypes.number,
+  timeout: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      enter: PropTypes.number,
+      exit: PropTypes.number,
+    }),
+  ]).isRequired,
+  loadingComponent: PropTypes.element,
 }
 
 PageTransition.defaultProps = {
   timeout: 300,
+  loadingComponent: null,
 }
 
 export default PageTransition

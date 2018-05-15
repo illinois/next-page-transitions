@@ -5,5 +5,5 @@ console.log(animations)
 
 module.exports = {
   PageTransition,
-  animations
+  animations,
 }
