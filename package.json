@@ -1,6 +1,6 @@
 {
   "name": "next-page-transitions",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.1",
   "description": "Simple and customizable page transitions for Next.js apps",
   "main": "lib/index.js",
   "scripts": {
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nwalters512/next-page-transitions.git"
+    "url": "git+https://github.com/illinois/next-page-transitions.git"
   },
   "author": "Nathan Walters <nwalters512@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nwalters512/next-page-transitions/issues"
+    "url": "https://github.com/illinois/next-page-transitions/issues"
   },
-  "homepage": "https://github.com/nwalters512/next-page-transitions#readme",
+  "homepage": "https://github.com/illinois/next-page-transitions#readme",
   "dependencies": {
     "prop-types": "^15.6.1",
     "react-transition-group": "^2.3.1"
