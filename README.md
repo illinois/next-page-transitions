@@ -11,12 +11,17 @@ next page isn't mounted until the previous one has completed its exit animation.
 It also has built-in support for showing a loading indicator if your page
 component has to load data before it can be shown.
 
+### Examples
+
+If you prefer to learn by example, check out the `examples` directory for
+some Next.js apps that demonstrate how this library can be used.
+
 ### Getting started
 
 First, install the package:
 
 ```
-npm install next-page-transitions
+npm install --save next-page-transitions
 ```
 
 Next, ensure that your app has a custom `App` component; if not,

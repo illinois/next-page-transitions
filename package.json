@@ -3,8 +3,11 @@
   "version": "1.0.0-alpha.1",
   "description": "Simple and customizable page transitions for Next.js apps",
   "main": "lib/index.js",
+  "files": [
+    "lib/"
+  ],
   "scripts": {
-    "build": "rimraf lib && cp README.md LICENSE ./lib && babel src --out-dir lib",
+    "build": "rimraf lib && babel src --out-dir lib",
     "build-watch": "rimraf lib && babel src --out-dir lib --watch",
     "prettier": "prettier --write \"src/**/*.js\" \"examples/**/*.js\"",
     "prettier-diff": "prettier --list-different \"src/**/*.js\" \"examples/**/*.js\"",

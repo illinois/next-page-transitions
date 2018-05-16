@@ -1,0 +1,8 @@
+.gitignore
+.babelrc
+.eslingignore
+.eslintrc.js
+.prettierignore
+.prettierrc.yml
+src/
+examples/
