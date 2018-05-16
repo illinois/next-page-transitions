@@ -54,7 +54,7 @@ export default class MyApp extends App {
     const {Component, pageProps} = this.props
     return (
       <Container>
-        <PageTransition timeout={300} className="page-transition" >
+        <PageTransition timeout={300} classNames="page-transition" >
           <Component {...pageProps} />
         </PageTransition>
         <style jsx global>{`
