@@ -59,9 +59,9 @@ class PageTransition extends React.Component {
   constructor(props) {
     super(props)
 
-    const { children, appear } = props
+    const { children } = props
     this.state = {
-      state: appear ? 'entered' : 'enter',
+      state: 'enter',
       isIn: !shouldDelayEnter(children),
       currentChildren: children,
       nextChildren: null,
@@ -143,9 +143,17 @@ class PageTransition extends React.Component {
     if (this.state.timeoutId) {
       clearTimeout(this.state.timeoutId)
     }
-    this.setState({
-      showLoading: false,
-    })
+    if (this.state.showLoading) {
+      // We'll hide the loader first and animate in the page on the next tick
+      this.setState({
+        showLoading: false,
+      })
+    } else {
+      // We can immediately bring in the next page!
+      this.setState({
+        isIn: true,
+      })
+    }
   }
 
   startEnterTimer() {
@@ -159,7 +167,6 @@ class PageTransition extends React.Component {
   render() {
     const {
       timeout,
-      appear,
       loadingComponent,
       loadingCallbackName,
     } = this.props
@@ -179,7 +186,7 @@ class PageTransition extends React.Component {
         <Transition
           timeout={timeout}
           in={this.state.isIn}
-          appear={appear}
+          appear
           onEnter={this.onEnter}
           onEntering={this.onEntering}
           onEntered={() => this.onEntered()}
@@ -214,8 +221,7 @@ class PageTransition extends React.Component {
 PageTransition.propTypes = {
   children: PropTypes.node.isRequired,
   classNames: PropTypes.string.isRequired,
-  timeout: timeoutsShape,
-  appear: PropTypes.bool,
+  timeout: timeoutsShape.isRequired,
   loadingComponent: PropTypes.element,
   loadingDelay: PropTypes.number,
   loadingCallbackName: PropTypes.string,
@@ -234,11 +240,9 @@ PageTransition.propTypes = {
 }
 
 PageTransition.defaultProps = {
-  timeout: 300,
   loadingComponent: null,
   loadingCallbackName: 'pageTransitionReadyToEnter',
   loadingDelay: 500,
-  appear: true,
 }
 
 export default PageTransition
