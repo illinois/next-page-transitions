@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Link from 'next/link'
 
 class About extends React.Component {
-  static shouldDelayEnter = true
+  static pageTransitionDelayEnter = true
 
   constructor(props) {
     super(props)
@@ -14,7 +14,7 @@ class About extends React.Component {
 
   componentDidMount() {
     this.timeoutId = setTimeout(() => {
-      this.props.onReadyToEnter()
+      this.props.pageTransitionReadyToEnter()
       this.setState({ loaded: true })
     }, 2000)
   }
@@ -42,11 +42,11 @@ class About extends React.Component {
 }
 
 About.propTypes = {
-  onReadyToEnter: PropTypes.func,
+  pageTransitionReadyToEnter: PropTypes.func,
 }
 
 About.defaultProps = {
-  onReadyToEnter: () => {},
+  pageTransitionReadyToEnter: () => {},
 }
 
 export default About

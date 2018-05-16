@@ -21,7 +21,7 @@ export default class MyApp extends App {
       <Container>
         <PageTransition
           timeout={300}
-          classNames="fade"
+          classNames="page-transition"
           loadingComponent={<Loader />}
           loadingDelay={500}
           loadingTimeout={{
@@ -33,19 +33,19 @@ export default class MyApp extends App {
           <Component {...pageProps} />
         </PageTransition>
         <style jsx global>{`
-          .fade-enter {
+          .page-transition-enter {
             opacity: 0;
             transform: translate3d(0, 20px, 0);
           }
-          .fade-enter-active {
+          .page-transition-enter-active {
             opacity: 1;
             transform: translate3d(0, 0, 0);
             transition: opacity 300ms, transform 300ms;
           }
-          .fade-exit {
+          .page-transition-exit {
             opacity: 1;
           }
-          .fade-exit-active {
+          .page-transition-exit-active {
             opacity: 0;
             transition: opacity 300ms;
           }

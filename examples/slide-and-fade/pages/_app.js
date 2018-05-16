@@ -18,33 +18,25 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props
     return (
       <Container>
-        <PageTransition timeout={300} classNames="fade">
+        <PageTransition timeout={300} classNames="page-transition">
           <Component {...pageProps} />
         </PageTransition>
         <style jsx global>{`
-          .fade-enter {
+          .page-transition-enter {
             opacity: 0;
             transform: translate3d(0, 20px, 0);
           }
-          .fade-enter-active {
+          .page-transition-enter-active {
             opacity: 1;
             transform: translate3d(0, 0, 0);
             transition: opacity 300ms, transform 300ms;
           }
-          .fade-exit {
+          .page-transition-exit {
             opacity: 1;
           }
-          .fade-exit-active {
+          .page-transition-exit-active {
             opacity: 0;
             transition: opacity 300ms;
-          }
-          .indicator-fade-enter {
-            opacity: 0;
-          }
-          .indicator-fade-appear-active,
-          .indicator-fade-enter-active {
-            opacity: 1;
-            transition: opacity 200ms;
           }
         `}</style>
       </Container>

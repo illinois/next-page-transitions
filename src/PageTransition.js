@@ -41,18 +41,28 @@ function buildClassName(className, state) {
 }
 
 function shouldDelayEnter(children) {
-  return React.isValidElement(children) && children.type.shouldDelayEnter
+  return (
+    React.isValidElement(children) && children.type.pageTransitionDelayEnter
+  )
+}
+
+function makeStateUpdater(state, otherProps) {
+  return function updateState() {
+    this.setState({
+      state,
+      ...otherProps,
+    })
+  }
 }
 
 class PageTransition extends React.Component {
   constructor(props) {
     super(props)
 
-    const { children } = props
-    const delayedEnter = shouldDelayEnter(children)
+    const { children, appear } = props
     this.state = {
-      state: 'enter',
-      isIn: !delayedEnter,
+      state: appear ? 'entered' : 'enter',
+      isIn: !shouldDelayEnter(children),
       currentChildren: children,
       nextChildren: null,
       renderedChildren: children,
@@ -92,10 +102,7 @@ class PageTransition extends React.Component {
         clearTimeout(this.state.timeoutId)
       }
     } else if (needsTransition && !isIn && state === 'exited') {
-      if (
-        React.isValidElement(nextChildren) &&
-        nextChildren.type.shouldDelayEnter
-      ) {
+      if (shouldDelayEnter(nextChildren)) {
         // Wait for the ready callback to actually transition in, but still
         // mount the component to allow it to start loading things
         this.setState({
@@ -120,42 +127,17 @@ class PageTransition extends React.Component {
     }
   }
 
-  onEnter() {
-    this.setState({
-      state: 'enter',
-      showLoading: false,
-    })
-  }
+  onEnter = makeStateUpdater('enter', { showLoading: false }).bind(this)
 
-  onEntering() {
-    this.setState({
-      state: 'entering',
-    })
-  }
+  onEntering = makeStateUpdater('entering').bind(this)
 
-  onEntered() {
-    this.setState({
-      state: 'entered',
-    })
-  }
+  onEntered = makeStateUpdater('entered').bind(this)
 
-  onExit() {
-    this.setState({
-      state: 'exit',
-    })
-  }
-  onExiting() {
-    this.setState({
-      state: 'exiting',
-    })
-  }
+  onExit = makeStateUpdater('exit').bind(this)
 
-  onExited() {
-    this.setState({
-      renderedChildren: null,
-      state: 'exited',
-    })
-  }
+  onExiting = makeStateUpdater('exiting').bind(this)
+
+  onExited = makeStateUpdater('exited', { renderedChildren: null }).bind(this)
 
   onChildLoaded() {
     if (this.state.timeoutId) {
@@ -175,20 +157,21 @@ class PageTransition extends React.Component {
   }
 
   render() {
+    const {
+      timeout,
+      appear,
+      loadingComponent,
+      loadingCallbackName,
+    } = this.props
     const { renderedChildren: children, state } = this.state
-    const { timeout, loadingComponent } = this.props
-    if (
-      this.state.state === 'entering' ||
-      this.state.state === 'exiting' ||
-      this.state.state === 'exited'
-    ) {
+
+    if (['entering', 'exiting', 'exited'].includes(state)) {
       // Need to reflow!
       // eslint-disable-next-line no-unused-expressions
       if (document.body) document.body.scrollTop
     }
 
     const hasLoadingComponent = !!loadingComponent
-
     const containerClassName = buildClassName(this.props.classNames, state)
 
     return (
@@ -196,9 +179,9 @@ class PageTransition extends React.Component {
         <Transition
           timeout={timeout}
           in={this.state.isIn}
-          appear
-          onEnter={() => this.onEnter()}
-          onEntering={() => this.onEntering()}
+          appear={appear}
+          onEnter={this.onEnter}
+          onEntering={this.onEntering}
           onEntered={() => this.onEntered()}
           onExit={() => this.onExit()}
           onExiting={() => this.onExiting()}
@@ -207,7 +190,7 @@ class PageTransition extends React.Component {
           <div className={containerClassName}>
             {children &&
               React.cloneElement(children, {
-                onReadyToEnter: () => this.onChildLoaded(),
+                [loadingCallbackName]: () => this.onChildLoaded(),
               })}
           </div>
         </Transition>
@@ -230,10 +213,12 @@ class PageTransition extends React.Component {
 
 PageTransition.propTypes = {
   children: PropTypes.node.isRequired,
-  timeout: timeoutsShape,
   classNames: PropTypes.string.isRequired,
+  timeout: timeoutsShape,
+  appear: PropTypes.bool,
   loadingComponent: PropTypes.element,
   loadingDelay: PropTypes.number,
+  loadingCallbackName: PropTypes.string,
   /* eslint-disable react/require-default-props */
   loadingTimeout: (props, ...args) => {
     let pt = timeoutsShape
@@ -251,7 +236,9 @@ PageTransition.propTypes = {
 PageTransition.defaultProps = {
   timeout: 300,
   loadingComponent: null,
+  loadingCallbackName: 'pageTransitionReadyToEnter',
   loadingDelay: 500,
+  appear: true,
 }
 
 export default PageTransition
