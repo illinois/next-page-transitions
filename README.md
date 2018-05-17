@@ -92,6 +92,19 @@ the new page is mounted and a similar pair of `.page-transition-enter` and
 `page-transition-enter-active` classes will be applied. This process repeats
 every time a new page is navigated to.
 
+### Handling Context/Store changes that update props on the Component
+
+If you happen to have an architecture that allows for changes to flow into
+your page from the `_app.js` component, you may notice that transitions trigger
+on the page when the props change. To remedy this, provide a key prop on your
+Component. With Next.js there is a really great way to do this, using the router.
+
+```js
+<PageTransition classNames="page-transition" timeout={300}>
+  <Component key={this.props.router.route} {...pageProps} />
+</PageTransition>
+```
+
 ### Support for delayed enters
 
 Suppose you have a page that needs to make a network request before it can
