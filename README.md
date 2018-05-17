@@ -1,4 +1,5 @@
 # next-page-transitions
+
 Simple and customizable page transitions for Next.js apps
 
 ### What does this library do for me?
@@ -35,26 +36,26 @@ particular opinion about how the styles end up on your page. The example below
 has a simple transition that fades pages in and out.
 
 ```js
-import App, {Container} from 'next/app'
+import App, { Container } from 'next/app'
 import React from 'react'
 import { PageTransition } from 'next-page-transitions'
 
 export default class MyApp extends App {
-  static async getInitialProps ({ Component, router, ctx }) {
+  static async getInitialProps({ Component, router, ctx }) {
     let pageProps = {}
 
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx)
     }
 
-    return {pageProps}
+    return { pageProps }
   }
 
-  render () {
-    const {Component, pageProps} = this.props
+  render() {
+    const { Component, pageProps } = this.props
     return (
       <Container>
-        <PageTransition timeout={300} classNames="page-transition" >
+        <PageTransition timeout={300} classNames="page-transition">
           <Component {...pageProps} />
         </PageTransition>
         <style jsx global>{`
@@ -109,9 +110,9 @@ place! By default, the callback is passed via the `pageTransitionReadyToEnter`
 prop, but this can be specified by setting the `loadingCallbackName` prop on
 your `PageTransition` component.
 
-*Note: make sure that your component returns `null` from its `render()` function
+_Note: make sure that your component returns `null` from its `render()` function
 until it has finished loading its content and is ready to be animated in. Your
-page will still be in the React component tree while it's loading!*
+page will still be in the React component tree while it's loading!_
 
 "But my network requests are usually fast!", you'll say. "They usually take only
 a few hundred milliseconds, and I don't want to flash a loading indicator on the
@@ -150,9 +151,7 @@ class About extends React.Component {
 
   render() {
     if (!this.state.loaded) return null
-    return (
-      <div>Hello, world!</div>
-    )
+    return <div>Hello, world!</div>
   }
 }
 ```
@@ -187,6 +186,39 @@ example of what this looks like. The "About" page (`pages/about.js`) will wait
 2 seconds before displaying its content, and in the meantime, the component at
 `components/Loader.js` will be displayed. Play around with the various delays
 to gain a deeper sense of how this component works.
+
+### `PageTransition` props
+
+* **`classNames`**: Specifies the class names that will be applied to the page
+  wrapper to drive the page transition animations. Analogous to the `classNames`
+  prop of
+  [`react-transition-group`'s `CSSTranstition` component'](http://reactcommunity.org/react-transition-group/css-transition).
+  However, note that only the string form of that prop is supported at present.
+  Also, note that this library doesn't have a separate "appear" state; only
+  "enter" and "exit" classes are needed.
+ * **`timeout`**: Specifies timeouts for the page transition animations.
+  Analogous to the `timeout` prop of
+  [`react-transition-group`'s `CSSTranstition` component'](http://reactcommunity.org/react-transition-group/css-transition)
+* **`loadingComponent`**: A React element to be shown while
+* **`loadingDelay`**: The duration to wait before showing the loading
+  indicator, in milliseconds. If a page finishes loading before this duration
+  has elapsed, the loading component will never be shown. Defaults to 500ms.
+* **`loadingCallbackName`**: Specifies the name of the prop that your page will
+  receive to call when it's done loading. Defaults to `pageTransitionReadyToEnter`
+* **`loadingTimeout`**: Analogous to the `timeout` prop of
+  [`react-transition-group`'s `CSSTranstition` component'](http://reactcommunity.org/react-transition-group/css-transition).
+  If this prop is set to `0`, the loading indicator won't be animated on/off
+  the screen.
+* **`loadingClassNames`**: Specifies the class names that will be applied to the
+  loading component if one is specified. Analogous to the `classNames` prop of
+  [`react-transition-group`'s `CSSTranstition` component'](http://reactcommunity.org/react-transition-group/css-transition)
+* **`monkeyPatchScrolling`**: By default, Next's `Link` component will scroll to
+  the top of the page whenever it is clicked; this can have an undesirable
+  jumpy effect when a page is transitioning out. If this prop is set to `true`
+  when the component is mounted, then `window.scrollTo` will be monkey-patched
+  so that programmatic scrolling can be disabled while a page is transitioning
+  out. Defaults to false, since this potentially sketchy behavior should be
+  opt-in.
 
 ### Contributing
 

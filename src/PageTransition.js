@@ -76,6 +76,16 @@ class PageTransition extends React.Component {
         timeoutId: this.startEnterTimer(),
       })
     }
+
+    if (this.props.monkeyPatchScrolling && typeof window !== 'undefined') {
+      // Forgive me for what I'm about to do
+      this.originalScrollTo = window.scrollTo
+      this.disableScrolling = false
+      window.scrollTo = (...args) => {
+        if (this.disableScrolling) return
+        this.originalScrollTo.apply(window, args)
+      }
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -127,13 +137,33 @@ class PageTransition extends React.Component {
     }
   }
 
-  onEnter = makeStateUpdater('enter', { showLoading: false }).bind(this)
+  componentWillUnmount() {
+    if (this.originalScrollTo && typeof window !== 'undefined') {
+      window.scrollTo = this.originalScrollTo
+    }
+    if (this.state.timeoutId) clearTimeout(this.state.timeoutId)
+  }
+
+  onEnter() {
+    // It's safe to reenable scrolling now
+    this.disableScrolling = false
+    this.setState({
+      state: 'enter',
+      showLoading: false,
+    })
+  }
 
   onEntering = makeStateUpdater('entering').bind(this)
 
   onEntered = makeStateUpdater('entered').bind(this)
 
-  onExit = makeStateUpdater('exit').bind(this)
+  onExit() {
+    // Disable scrolling until this component has unmounted
+    this.disableScrolling = true
+    this.setState({
+      state: 'exit',
+    })
+  }
 
   onExiting = makeStateUpdater('exiting').bind(this)
 
@@ -165,11 +195,7 @@ class PageTransition extends React.Component {
   }
 
   render() {
-    const {
-      timeout,
-      loadingComponent,
-      loadingCallbackName,
-    } = this.props
+    const { timeout, loadingComponent, loadingCallbackName } = this.props
     const { renderedChildren: children, state } = this.state
 
     if (['entering', 'exiting', 'exited'].includes(state)) {
@@ -187,8 +213,8 @@ class PageTransition extends React.Component {
           timeout={timeout}
           in={this.state.isIn}
           appear
-          onEnter={this.onEnter}
-          onEntering={this.onEntering}
+          onEnter={() => this.onEnter()}
+          onEntering={() => this.onEntering()}
           onEntered={() => this.onEntered()}
           onExit={() => this.onExit()}
           onExiting={() => this.onExiting()}
@@ -237,12 +263,14 @@ PageTransition.propTypes = {
     return pt(props, ...args)
   },
   /* eslint-enable react/require-default-props */
+  monkeyPatchScrolling: PropTypes.bool,
 }
 
 PageTransition.defaultProps = {
   loadingComponent: null,
   loadingCallbackName: 'pageTransitionReadyToEnter',
   loadingDelay: 500,
+  monkeyPatchScrolling: false,
 }
 
 export default PageTransition
