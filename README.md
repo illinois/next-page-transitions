@@ -2,6 +2,8 @@
 
 Simple and customizable page transitions for Next.js apps
 
+**Demo:** https://next-page-transitions.now.sh/
+
 ### What does this library do for me?
 
 Simply put, it makes it easy to add page transitions to apps build with Next.js.
