@@ -207,13 +207,15 @@ to gain a deeper sense of how this component works.
 * **`classNames`**: Specifies the class names that will be applied to the page
   wrapper to drive the page transition animations. Analogous to the `classNames`
   prop of
-  [`react-transition-group`'s `CSSTranstition` component'](http://reactcommunity.org/react-transition-group/css-transition).
+  `react-transition-group`'s [`CSSTranstition`](http://reactcommunity.org/react-transition-group/css-transition)
+  component.
   However, note that only the string form of that prop is supported at present.
   Also, note that this library doesn't have a separate "appear" state; only
   "enter" and "exit" classes are needed.
  * **`timeout`**: Specifies timeouts for the page transition animations.
   Analogous to the `timeout` prop of
-  [`react-transition-group`'s `CSSTranstition` component'](http://reactcommunity.org/react-transition-group/css-transition)
+  `react-transition-group`'s [`CSSTranstition`](http://reactcommunity.org/react-transition-group/css-transition)
+  component.
 * **`loadingComponent`**: A React element to be shown while
 * **`loadingDelay`**: The duration to wait before showing the loading
   indicator, in milliseconds. If a page finishes loading before this duration
@@ -221,12 +223,13 @@ to gain a deeper sense of how this component works.
 * **`loadingCallbackName`**: Specifies the name of the prop that your page will
   receive to call when it's done loading. Defaults to `pageTransitionReadyToEnter`
 * **`loadingTimeout`**: Analogous to the `timeout` prop of
-  [`react-transition-group`'s `CSSTranstition` component'](http://reactcommunity.org/react-transition-group/css-transition).
-  If this prop is set to `0`, the loading indicator won't be animated on/off
+  `react-transition-group`'s [`CSSTranstition`](http://reactcommunity.org/react-transition-group/css-transition)
+  component. If this prop is set to `0`, the loading indicator won't be animated on/off
   the screen.
 * **`loadingClassNames`**: Specifies the class names that will be applied to the
   loading component if one is specified. Analogous to the `classNames` prop of
-  [`react-transition-group`'s `CSSTranstition` component'](http://reactcommunity.org/react-transition-group/css-transition)
+  `react-transition-group`'s [`CSSTranstition`](http://reactcommunity.org/react-transition-group/css-transition)
+  component.
 * **`monkeyPatchScrolling`**: By default, Next's `Link` component will scroll to
   the top of the page whenever it is clicked; this can have an undesirable
   jumpy effect when a page is transitioning out. If this prop is set to `true`
