@@ -198,11 +198,11 @@ class PageTransition extends React.Component {
     const { timeout, loadingComponent, loadingCallbackName } = this.props
     const { renderedChildren: children, state } = this.state
 
-    if (['entering', 'exiting', 'exited'].includes(state)) {
+    if (['entering', 'exiting', 'exited'].indexOf(state) !== -1) {
       // Need to reflow!
       // eslint-disable-next-line no-unused-expressions
-      if (document.body) document.body.scrollTop
-    }
+      if (document.body) document.body.scrollTop;
+     }
 
     const hasLoadingComponent = !!loadingComponent
     const containerClassName = buildClassName(this.props.classNames, state)
