@@ -11,4 +11,15 @@ module.exports = {
     'arrow-body-style': ['off'],
     'jsx-a11y/anchor-is-valid': ['off'],
   },
+  settings: {
+    "import/resolver": {
+      "babel-module": {
+        "root": ["./src"],
+        "alias": {
+          "src": "./src",
+          "examples": "./examples"
+        }
+      }
+    }
+  }
 }

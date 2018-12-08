@@ -12,7 +12,10 @@
     "prettier": "prettier --write \"src/**/*.js\" \"examples/**/*.js\"",
     "prettier:diff": "prettier --list-different \"src/**/*.js\" \"examples/**/*.js\"",
     "lint": "eslint --ext js src examples",
-    "lint:fix": "eslint --ext js . --fix"
+    "lint:fix": "eslint --ext js . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -25,21 +28,23 @@
   },
   "homepage": "https://github.com/illinois/next-page-transitions#readme",
   "dependencies": {
-    "prop-types": "^15.6.1",
-    "react-transition-group": "^2.3.1"
+    "prop-types": "~15.6.2",
+    "react-transition-group": "~2.5.0"
   },
   "peerDependencies": {
     "react": ">=16.0.0",
     "react-dom": ">=16.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.0.0-beta.42",
-    "@babel/core": "7.0.0-beta.42",
-    "@babel/plugin-proposal-class-properties": "7.0.0-beta.42",
-    "@babel/plugin-proposal-object-rest-spread": "7.0.0-beta.42",
-    "@babel/preset-env": "7.0.0-beta.42",
-    "@babel/preset-react": "7.0.0-beta.42",
+    "@babel/cli": "~7.2.0",
+    "@babel/core": "~7.2.0",
+    "babel-core": "~7.0.0-bridge.0",
+    "@babel/plugin-proposal-class-properties": "~7.2.1",
+    "@babel/plugin-proposal-object-rest-spread": "~7.2.0",
+    "@babel/preset-env": "~7.2.0",
+    "@babel/preset-react": "~7.0.0",
     "babel-eslint": "^8.2.3",
+    "babel-plugin-module-resolver": "~3.1.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-prettier": "^2.9.0",
@@ -47,12 +52,18 @@
     "eslint-plugin-jsx": "0.0.2",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.8.2",
+    "eslint-import-resolver-babel-module": "~4.0.0",
     "husky": "^0.14.3",
     "prettier": "^1.12.1",
     "pretty-quick": "^1.4.1",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "rimraf": "^2.6.2"
+    "react": "~16.6.3",
+    "react-dom": "~16.6.3",
+    "rimraf": "~2.6.2",
+    "jest": "~23.6.0",
+    "babel-jest": "~23.6.0",
+    "regenerator-runtime": "~0.13.1",
+    "enzyme": "~3.7.0",
+    "enzyme-adapter-react-16": "~1.7.0"
   },
   "husky": {
     "hooks": {
