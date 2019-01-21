@@ -247,7 +247,7 @@ class PageTransition extends React.Component {
 PageTransition.propTypes = {
   children: PropTypes.node.isRequired,
   classNames: PropTypes.string.isRequired,
-  timeout: timeoutsShape.isRequired,
+  timeout: timeoutsShape,
   loadingComponent: PropTypes.element,
   loadingDelay: PropTypes.number,
   loadingCallbackName: PropTypes.string,
@@ -268,9 +268,10 @@ PageTransition.propTypes = {
 
 PageTransition.defaultProps = {
   loadingComponent: null,
-  loadingCallbackName: 'pageTransitionReadyToEnter',
+  loadingCallbackName: 'pagessTransitionReadyToEnter',
   loadingDelay: 500,
   monkeyPatchScrolling: false,
+  timeout: null,
 }
 
 export default PageTransition
