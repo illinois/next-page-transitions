@@ -111,7 +111,7 @@ class PageTransition extends React.Component {
       if (this.state.timeoutId) {
         clearTimeout(this.state.timeoutId)
       }
-    } else if (needsTransition && !isIn && state === 'exited') {
+    } else if (needsTransition && !isIn && (state === 'enter' || state === 'exited')) {
       if (shouldDelayEnter(nextChildren)) {
         // Wait for the ready callback to actually transition in, but still
         // mount the component to allow it to start loading things
