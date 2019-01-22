@@ -268,7 +268,7 @@ PageTransition.propTypes = {
 
 PageTransition.defaultProps = {
   loadingComponent: null,
-  loadingCallbackName: 'pagessTransitionReadyToEnter',
+  loadingCallbackName: 'pagesTransitionReadyToEnter',
   loadingDelay: 500,
   monkeyPatchScrolling: false,
   timeout: null,
