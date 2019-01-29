@@ -264,7 +264,10 @@ PageTransition.propTypes = {
   timeout: (props, ...args) => {
     let pt = timeoutsShape
     if (pt) pt = pt.isRequired
-    return pt(props, ...args)
+    if (pt) {
+      pt = pt.isRequired
+      return pt(props, ...args)
+    }
   },
   /* eslint-enable react/require-default-props */
   monkeyPatchScrolling: PropTypes.bool,
