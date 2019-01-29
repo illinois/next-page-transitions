@@ -254,8 +254,10 @@ PageTransition.propTypes = {
   /* eslint-disable react/require-default-props */
   loadingTimeout: (props, ...args) => {
     let pt = timeoutsShape
-    if (props.loadingComponent && process.env.NODE_ENV !== "production") pt = pt.isRequired
-    return pt(props, ...args)
+    if (props.loadingComponent && process.env.NODE_ENV !== "production"){
+      pt = pt.isRequired
+      return pt(props, ...args)
+    }
   },
   loadingClassNames: (props, ...args) => {
     let pt = PropTypes.string
