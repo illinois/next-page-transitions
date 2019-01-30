@@ -247,15 +247,17 @@ class PageTransition extends React.Component {
 PageTransition.propTypes = {
   children: PropTypes.node.isRequired,
   classNames: PropTypes.string.isRequired,
-  timeout: timeoutsShape.isRequired,
+  timeout: process.env.NODE_ENV !== "production" ? timeoutsShape.isRequired : null,
   loadingComponent: PropTypes.element,
   loadingDelay: PropTypes.number,
   loadingCallbackName: PropTypes.string,
   /* eslint-disable react/require-default-props */
   loadingTimeout: (props, ...args) => {
     let pt = timeoutsShape
-    if (props.loadingComponent) pt = pt.isRequired
-    return pt(props, ...args)
+    if (props.loadingComponent && process.env.NODE_ENV !== "production"){
+      pt = pt.isRequired
+      return pt(props, ...args)
+    }
   },
   loadingClassNames: (props, ...args) => {
     let pt = PropTypes.string
