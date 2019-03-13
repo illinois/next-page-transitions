@@ -9,16 +9,21 @@ import CSSTransition from 'react-transition-group/CSSTransition'
 import { timeoutsShape } from 'react-transition-group/utils/PropTypes'
 
 function areChildrenDifferent(oldChildren, newChildren) {
-  if (oldChildren === newChildren) return false
-  if (
-    React.isValidElement(oldChildren) &&
-    React.isValidElement(newChildren) &&
-    oldChildren.key != null &&
-    oldChildren.key === newChildren.key
-  ) {
-    return false
+  return oldChildren !== newChildren
+}
+
+function differentChildrenNeedAnimation(oldChildren, newChildren) {
+  if (!React.isValidElement(oldChildren) || !React.isValidElement(newChildren)) {
+    console.warn('[next-page-transitions] PageTransition child was not a valid React component')
+    return true
   }
-  return true
+
+  if (oldChildren.key == null || newChildren.key == null) {
+    console.warn('[next-page-transitions] PageTransition child does not have a key')
+    return true
+  }
+
+  return oldChildren.key !== newChildren.key
 }
 
 function buildClassName(className, state) {
@@ -99,7 +104,20 @@ class PageTransition extends React.Component {
     const { children } = this.props
     const hasNewChildren = areChildrenDifferent(currentChildren, children)
     const needsTransition = areChildrenDifferent(renderedChildren, children)
-    if (hasNewChildren) {
+    const shouldAnimateTransition = differentChildrenNeedAnimation(renderedChildren, children)
+    console.log(isIn, hasNewChildren, needsTransition, shouldAnimateTransition)
+    if (isIn && needsTransition && !shouldAnimateTransition) {
+      // We need to update our rendered children, but we shouldn't animate them.
+      // This will occur when the key prop on our children stays the same but
+      // the children themselves change. This can happen in a lot of cases: HMR,
+      // a rerender due to a Redux state change, a Router.push to the current page,
+      // etc. In this case, we'll just immediately flush the children to be
+      // rendered.
+      this.setState({
+        currentChildren: children,
+        renderedChildren: children,
+      })
+    } else if (hasNewChildren) {
       // We got a new set of children while we were transitioning some in
       // Immediately start transitioning out this component and update the next
       // component

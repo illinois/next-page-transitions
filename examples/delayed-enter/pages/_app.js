@@ -16,7 +16,7 @@ export default class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props
+    const { Component, pageProps, router } = this.props
     return (
       <Container>
         <PageTransition
@@ -30,7 +30,7 @@ export default class MyApp extends App {
           }}
           loadingClassNames="loading-indicator"
         >
-          <Component {...pageProps} />
+          <Component {...pageProps} key={router.route} />
         </PageTransition>
         <style jsx global>{`
           .page-transition-enter {
