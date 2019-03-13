@@ -14,11 +14,13 @@ function areChildrenDifferent(oldChildren, newChildren) {
 
 function differentChildrenNeedAnimation(oldChildren, newChildren) {
   if (!React.isValidElement(oldChildren) || !React.isValidElement(newChildren)) {
-    console.warn('[next-page-transitions] PageTransition child was not a valid React component')
+    // eslint-disable-next-line no-console
+    console.warn('[next-page-transitions] PageTransition child is not a valid React component')
     return true
   }
 
   if (oldChildren.key == null || newChildren.key == null) {
+    // eslint-disable-next-line no-console
     console.warn('[next-page-transitions] PageTransition child does not have a key')
     return true
   }
@@ -105,7 +107,6 @@ class PageTransition extends React.Component {
     const hasNewChildren = areChildrenDifferent(currentChildren, children)
     const needsTransition = areChildrenDifferent(renderedChildren, children)
     const shouldAnimateTransition = differentChildrenNeedAnimation(renderedChildren, children)
-    console.log(isIn, hasNewChildren, needsTransition, shouldAnimateTransition)
     if (isIn && needsTransition && !shouldAnimateTransition) {
       // We need to update our rendered children, but we shouldn't animate them.
       // This will occur when the key prop on our children stays the same but
