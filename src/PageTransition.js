@@ -13,15 +13,26 @@ function areChildrenDifferent(oldChildren, newChildren) {
 }
 
 function differentChildrenNeedAnimation(oldChildren, newChildren) {
-  if (!React.isValidElement(oldChildren) || !React.isValidElement(newChildren)) {
+  if (!oldChildren || !newChildren) {
+    return true
+  }
+
+  if (
+    !React.isValidElement(oldChildren) ||
+    !React.isValidElement(newChildren)
+  ) {
     // eslint-disable-next-line no-console
-    console.warn('[next-page-transitions] PageTransition child is not a valid React component')
+    console.warn(
+      '[next-page-transitions] PageTransition child is not a valid React component'
+    )
     return true
   }
 
   if (oldChildren.key == null || newChildren.key == null) {
     // eslint-disable-next-line no-console
-    console.warn('[next-page-transitions] PageTransition child does not have a key')
+    console.warn(
+      '[next-page-transitions] PageTransition child does not have a key'
+    )
     return true
   }
 
@@ -78,13 +89,14 @@ class PageTransition extends React.Component {
   }
 
   componentDidMount() {
-    if (shouldDelayEnter(this.props.children)) {
+    const { children, monkeyPatchScrolling } = this.props
+    if (shouldDelayEnter(children)) {
       this.setState({
         timeoutId: this.startEnterTimer(),
       })
     }
 
-    if (this.props.monkeyPatchScrolling && typeof window !== 'undefined') {
+    if (monkeyPatchScrolling && typeof window !== 'undefined') {
       // Forgive me for what I'm about to do
       this.originalScrollTo = window.scrollTo
       this.disableScrolling = false
@@ -104,9 +116,12 @@ class PageTransition extends React.Component {
       state,
     } = this.state
     const { children } = this.props
+    const { timeoutId, showLoading } = this.state
     const hasNewChildren = areChildrenDifferent(currentChildren, children)
     const needsTransition = areChildrenDifferent(renderedChildren, children)
-    const shouldAnimateTransition = differentChildrenNeedAnimation(renderedChildren, children)
+    const shouldAnimateTransition =
+      needsTransition &&
+      differentChildrenNeedAnimation(renderedChildren, children)
     if (isIn && needsTransition && !shouldAnimateTransition) {
       // We need to update our rendered children, but we shouldn't animate them.
       // This will occur when the key prop on our children stays the same but
@@ -127,10 +142,14 @@ class PageTransition extends React.Component {
         nextChildren: children,
         currentChildren: children,
       })
-      if (this.state.timeoutId) {
-        clearTimeout(this.state.timeoutId)
+      if (timeoutId) {
+        clearTimeout(timeoutId)
       }
-    } else if (needsTransition && !isIn && (state === 'enter' || state === 'exited')) {
+    } else if (
+      needsTransition &&
+      !isIn &&
+      (state === 'enter' || state === 'exited')
+    ) {
       if (shouldDelayEnter(nextChildren)) {
         // Wait for the ready callback to actually transition in, but still
         // mount the component to allow it to start loading things
@@ -147,7 +166,7 @@ class PageTransition extends React.Component {
           nextChildren: null,
         })
       }
-    } else if (prevState.showLoading && !this.state.showLoading) {
+    } else if (prevState.showLoading && !showLoading) {
       // We hid the loading indicator; now that that change has been flushed to
       // the DOM, we can now bring in the next component!
       this.setState({
@@ -160,7 +179,8 @@ class PageTransition extends React.Component {
     if (this.originalScrollTo && typeof window !== 'undefined') {
       window.scrollTo = this.originalScrollTo
     }
-    if (this.state.timeoutId) clearTimeout(this.state.timeoutId)
+    const { timeoutId } = this.state
+    if (timeoutId) clearTimeout(timeoutId)
   }
 
   onEnter() {
@@ -189,10 +209,11 @@ class PageTransition extends React.Component {
   onExited = makeStateUpdater('exited', { renderedChildren: null }).bind(this)
 
   onChildLoaded() {
-    if (this.state.timeoutId) {
-      clearTimeout(this.state.timeoutId)
+    const { timeoutId, showLoading } = this.state
+    if (timeoutId) {
+      clearTimeout(timeoutId)
     }
-    if (this.state.showLoading) {
+    if (showLoading) {
       // We'll hide the loader first and animate in the page on the next tick
       this.setState({
         showLoading: false,
@@ -206,16 +227,24 @@ class PageTransition extends React.Component {
   }
 
   startEnterTimer() {
+    const { loadingDelay } = this.props
     return setTimeout(() => {
       this.setState({
         showLoading: true,
       })
-    }, this.props.loadingDelay)
+    }, loadingDelay)
   }
 
   render() {
-    const { timeout, loadingComponent, loadingCallbackName } = this.props
-    const { renderedChildren: children, state } = this.state
+    const {
+      timeout,
+      loadingComponent,
+      loadingCallbackName,
+      classNames,
+      loadingClassNames,
+      loadingTimeout,
+    } = this.props
+    const { renderedChildren: children, state, isIn, showLoading } = this.state
 
     if (['entering', 'exiting', 'exited'].indexOf(state) !== -1) {
       // Need to reflow!
@@ -224,13 +253,13 @@ class PageTransition extends React.Component {
     }
 
     const hasLoadingComponent = !!loadingComponent
-    const containerClassName = buildClassName(this.props.classNames, state)
+    const containerClassName = buildClassName(classNames, state)
 
     return (
       <Fragment>
         <Transition
           timeout={timeout}
-          in={this.state.isIn}
+          in={isIn}
           appear
           onEnter={() => this.onEnter()}
           onEntering={() => this.onEntering()}
@@ -248,12 +277,12 @@ class PageTransition extends React.Component {
         </Transition>
         {hasLoadingComponent && (
           <CSSTransition
-            in={this.state.showLoading}
+            in={showLoading}
             mountOnEnter
             unmountOnExit
             appear
-            classNames={this.props.loadingClassNames}
-            timeout={this.props.loadingTimeout}
+            classNames={loadingClassNames}
+            timeout={loadingTimeout}
           >
             {loadingComponent}
           </CSSTransition>
@@ -263,20 +292,28 @@ class PageTransition extends React.Component {
   }
 }
 
+// We do weird things with timeoutsShape because these are omitted in some
+// environments
+// See https://github.com/reactjs/react-transition-group/pull/448
 PageTransition.propTypes = {
   children: PropTypes.node.isRequired,
   classNames: PropTypes.string.isRequired,
-  timeout: process.env.NODE_ENV !== "production" ? timeoutsShape.isRequired : null,
+  /* eslint-disable react/require-default-props */
+  timeout: (props, ...args) => {
+    if (timeoutsShape) {
+      return timeoutsShape.isRequired(props, ...args)
+    }
+    return undefined
+  },
   loadingComponent: PropTypes.element,
   loadingDelay: PropTypes.number,
   loadingCallbackName: PropTypes.string,
   /* eslint-disable react/require-default-props */
   loadingTimeout: (props, ...args) => {
-    let pt = timeoutsShape
-    if (props.loadingComponent && process.env.NODE_ENV !== "production"){
-      pt = pt.isRequired
-      return pt(props, ...args)
+    if (timeoutsShape && props.loadingComponent) {
+      return timeoutsShape.isRequired(props, ...args)
     }
+    return undefined
   },
   loadingClassNames: (props, ...args) => {
     let pt = PropTypes.string
