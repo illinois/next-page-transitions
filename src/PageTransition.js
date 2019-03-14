@@ -79,7 +79,7 @@ class PageTransition extends React.Component {
 
     const { children } = props
     this.state = {
-      state: 'enter',
+      state: (props.skipInitialTransition) ? 'init' : 'enter',
       isIn: !shouldDelayEnter(children),
       currentChildren: children,
       nextChildren: null,
@@ -243,6 +243,7 @@ class PageTransition extends React.Component {
       classNames,
       loadingClassNames,
       loadingTimeout,
+      skipInitialTransition,
     } = this.props
     const { renderedChildren: children, state, isIn, showLoading } = this.state
 
@@ -260,7 +261,7 @@ class PageTransition extends React.Component {
         <Transition
           timeout={timeout}
           in={isIn}
-          appear
+          appear={!skipInitialTransition}
           onEnter={() => this.onEnter()}
           onEntering={() => this.onEntering()}
           onEntered={() => this.onEntered()}
@@ -322,6 +323,7 @@ PageTransition.propTypes = {
   },
   /* eslint-enable react/require-default-props */
   monkeyPatchScrolling: PropTypes.bool,
+  skipInitialTransition: PropTypes.bool,
 }
 
 PageTransition.defaultProps = {
@@ -329,6 +331,7 @@ PageTransition.defaultProps = {
   loadingCallbackName: 'pageTransitionReadyToEnter',
   loadingDelay: 500,
   monkeyPatchScrolling: false,
+  skipInitialTransition: false,
 }
 
 export default PageTransition
