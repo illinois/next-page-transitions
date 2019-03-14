@@ -37,7 +37,7 @@ produce and consume CSS, it doesn't offer any built-in styles and has no
 particular opinion about how the styles end up on your page. The example below
 has a simple transition that fades pages in and out.
 
-```js
+```jsx
 import App, { Container } from 'next/app'
 import React from 'react'
 import { PageTransition } from 'next-page-transitions'
@@ -58,7 +58,7 @@ export default class MyApp extends App {
     return (
       <Container>
         <PageTransition timeout={300} classNames="page-transition">
-          <Component {...pageProps} />
+          <Component {...pageProps} key={router.route} />
         </PageTransition>
         <style jsx global>{`
           .page-transition-enter {
@@ -82,7 +82,7 @@ export default class MyApp extends App {
 }
 ```
 
-When you move to a new page, the `Component` will change, and the
+When you move to a new page, the `key` prop will change, and the
 `PageTransition` component will detect that. Instead of immediately unmounting
 the page, it will apply the `page-transition-exit` class to a wrapper around
 the page to initialize the "exit" transition, and will then apply the
@@ -94,18 +94,11 @@ the new page is mounted and a similar pair of `.page-transition-enter` and
 `page-transition-enter-active` classes will be applied. This process repeats
 every time a new page is navigated to.
 
-### Handling Context/Store changes that update props on the Component
-
-If you happen to have an architecture that allows for changes to flow into
-your page from the `_app.js` component, you may notice that transitions trigger
-on the page when the props change. To remedy this, provide a key prop on your
-Component. With Next.js there is a really great way to do this, using the router.
-
-```js
-<PageTransition classNames="page-transition" timeout={300}>
-  <Component key={this.props.router.route} {...pageProps} />
-</PageTransition>
-```
+**Note**: in previous versions of `next-page-transitions`, it wasn't necessary
+to specify the `key` prop on children of `PageTransition`. However, to make hot
+module reloading work correctly, it was necessary to make this prop required.
+Moving foward, children that don't specify a `key` prop will trigger a warning
+in the console. In the future, this may become a runtime error.
 
 ### Support for delayed enters
 
@@ -188,7 +181,7 @@ until showing the network indicator:
   }}
   loadingClassNames="loading-indicator"
 >
-  <Component {...pageProps} />
+  <Component {...pageProps} key={router.route} />
 </PageTransition>
 ```
 

@@ -14,7 +14,8 @@ class About extends React.Component {
 
   componentDidMount() {
     this.timeoutId = setTimeout(() => {
-      this.props.pageTransitionReadyToEnter()
+      const { pageTransitionReadyToEnter } = this.props
+      pageTransitionReadyToEnter()
       this.setState({ loaded: true })
     }, 2000)
   }
@@ -24,7 +25,8 @@ class About extends React.Component {
   }
 
   render() {
-    if (!this.state.loaded) return null
+    const { loaded } = this.state
+    if (!loaded) return null
     return (
       <div className="container-fluid bg-success page">
         <h1>About us</h1>
