@@ -237,6 +237,10 @@ to gain a deeper sense of how this component works.
   so that programmatic scrolling can be disabled while a page is transitioning
   out. Defaults to false, since this potentially sketchy behavior should be
   opt-in.
+* **`skipInitialTransition`**: Specifies if page transition will be omitted on
+  first mount. If you want to have transitions only between pages, not on 
+  first page load, set `skipInitialTransition` to `true`. By default, 
+  `skipInitialTransition` is set to `false`.
 
 ### Contributing
 
