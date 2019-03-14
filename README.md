@@ -2,6 +2,8 @@
 
 Simple and customizable page transitions for Next.js apps
 
+![npm version](https://img.shields.io/npm/v/next-page-transitions.svg?style=flat-square)
+
 **Demo:** https://next-page-transitions.now.sh/
 
 ### What does this library do for me?
