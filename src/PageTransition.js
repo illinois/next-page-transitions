@@ -79,7 +79,7 @@ class PageTransition extends React.Component {
 
     const { children } = props
     this.state = {
-      state: (props.skipInitialTransition) ? 'init' : 'enter',
+      state: props.skipInitialTransition ? 'init' : 'enter',
       isIn: !shouldDelayEnter(children),
       currentChildren: children,
       nextChildren: null,
