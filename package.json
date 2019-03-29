@@ -1,6 +1,6 @@
 {
   "name": "next-page-transitions",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Simple and customizable page transitions for Next.js apps",
   "main": "lib/index.js",
   "files": [
