@@ -207,7 +207,12 @@ to gain a deeper sense of how this component works.
   However, note that only the string form of that prop is supported at present.
   Also, note that this library doesn't have a separate "appear" state; only
   "enter" and "exit" classes are needed.
- * **`timeout`**: Specifies timeouts for the page transition animations.
+* **`tag`**: Specifies the tag or component that will be used to render the
+  page wrapper. This element will receive the `classNames` prop. This is useful
+  if you want to use semantic markup, e.g. if you want to render the page
+  wrapper as `main`, or if you need to further customize the styling or
+  behavior of the page wrapper.
+* **`timeout`**: Specifies timeouts for the page transition animations.
   Analogous to the `timeout` prop of
   `react-transition-group`'s [`CSSTranstition`](http://reactcommunity.org/react-transition-group/css-transition)
   component.

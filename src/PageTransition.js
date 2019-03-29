@@ -237,6 +237,7 @@ class PageTransition extends React.Component {
 
   render() {
     const {
+      tag: Tag,
       timeout,
       loadingComponent,
       loadingCallbackName,
@@ -269,12 +270,12 @@ class PageTransition extends React.Component {
           onExiting={() => this.onExiting()}
           onExited={() => this.onExited()}
         >
-          <div className={containerClassName}>
+          <Tag className={containerClassName}>
             {children &&
               React.cloneElement(children, {
                 [loadingCallbackName]: () => this.onChildLoaded(),
               })}
-          </div>
+          </Tag>
         </Transition>
         {hasLoadingComponent && (
           <CSSTransition
@@ -297,6 +298,11 @@ class PageTransition extends React.Component {
 // environments
 // See https://github.com/reactjs/react-transition-group/pull/448
 PageTransition.propTypes = {
+  tag: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.string,
+    PropTypes.shape({ $$typeof: PropTypes.symbol, render: PropTypes.func }),
+  ]),
   children: PropTypes.node.isRequired,
   classNames: PropTypes.string.isRequired,
   /* eslint-disable react/require-default-props */
@@ -327,6 +333,7 @@ PageTransition.propTypes = {
 }
 
 PageTransition.defaultProps = {
+  tag: 'div',
   loadingComponent: null,
   loadingCallbackName: 'pageTransitionReadyToEnter',
   loadingDelay: 500,
