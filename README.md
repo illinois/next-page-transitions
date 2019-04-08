@@ -52,11 +52,11 @@ export default class MyApp extends App {
       pageProps = await Component.getInitialProps(ctx)
     }
 
-    return { pageProps }
+    return { pageProps, router }
   }
 
   render() {
-    const { Component, pageProps } = this.props
+    const { Component, pageProps, router } = this.props
     return (
       <Container>
         <PageTransition timeout={300} classNames="page-transition">
@@ -238,8 +238,8 @@ to gain a deeper sense of how this component works.
   out. Defaults to false, since this potentially sketchy behavior should be
   opt-in.
 * **`skipInitialTransition`**: Specifies if page transition will be omitted on
-  first mount. If you want to have transitions only between pages, not on 
-  first page load, set `skipInitialTransition` to `true`. By default, 
+  first mount. If you want to have transitions only between pages, not on
+  first page load, set `skipInitialTransition` to `true`. By default,
   `skipInitialTransition` is set to `false`.
 
 ### Contributing
