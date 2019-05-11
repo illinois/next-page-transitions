@@ -45,7 +45,7 @@ import React from 'react'
 import { PageTransition } from 'next-page-transitions'
 
 export default class MyApp extends App {
-  static async getInitialProps({ Component, router, ctx }) {
+  static async getInitialProps({ Component, ctx }) {
     let pageProps = {}
 
     if (Component.getInitialProps) {
@@ -56,7 +56,7 @@ export default class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props
+    const { Component, pageProps, router } = this.props
     return (
       <Container>
         <PageTransition timeout={300} classNames="page-transition">
