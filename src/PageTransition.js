@@ -142,7 +142,7 @@ class PageTransition extends React.Component {
       // page now exists in the DOM, and thus it's safe to scroll to the
       // current hash (if one exists).
       // See https://github.com/illinois/next-page-transitions/issues/35
-      scrollToHash();
+      scrollToHash()
     } else if (isIn && needsTransition && !shouldAnimateTransition) {
       // We need to update our rendered children, but we shouldn't animate them.
       // This will occur when the key prop on our children stays the same but
