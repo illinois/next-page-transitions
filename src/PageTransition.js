@@ -73,6 +73,21 @@ function makeStateUpdater(state, otherProps) {
   }
 }
 
+function scrollToHash() {
+  // Function lifted from
+  // https://github.com/zeit/next.js/blob/master/packages/next/client/index.js
+  let { hash } = window.location
+  hash = hash && hash.substring(1)
+  if (!hash) return
+
+  const el = document.getElementById(hash)
+  if (!el) return
+
+  // If we call scrollIntoView() in here without a setTimeout
+  // it won't scroll properly.
+  setTimeout(() => el.scrollIntoView(), 0)
+}
+
 class PageTransition extends React.Component {
   constructor(props) {
     super(props)
@@ -122,7 +137,13 @@ class PageTransition extends React.Component {
     const shouldAnimateTransition =
       needsTransition &&
       differentChildrenNeedAnimation(renderedChildren, children)
-    if (isIn && needsTransition && !shouldAnimateTransition) {
+    if (isIn && !needsTransition && state === 'enter') {
+      // We just began transitioning the current page in - this means that the
+      // page now exists in the DOM, and thus it's safe to scroll to the
+      // current hash (if one exists).
+      // See https://github.com/illinois/next-page-transitions/issues/35
+      scrollToHash();
+    } else if (isIn && needsTransition && !shouldAnimateTransition) {
       // We need to update our rendered children, but we shouldn't animate them.
       // This will occur when the key prop on our children stays the same but
       // the children themselves change. This can happen in a lot of cases: HMR,
