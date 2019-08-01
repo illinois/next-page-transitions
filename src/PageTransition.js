@@ -191,15 +191,22 @@ class PageTransition extends React.Component {
 
     // It's safe to reenable scrolling now
     this.disableScrolling = false
-    this.setState({
-      state: 'enter',
-      showLoading: false,
-    }, () => {
-      if (this.scrollToArgs && monkeyPatchScrolling && typeof window !== 'undefined') {
-        window.scrollTo(...this.scrollToArgs)
-        this.scrollToArgs = null
+    this.setState(
+      {
+        state: 'enter',
+        showLoading: false,
+      },
+      () => {
+        if (
+          this.scrollToArgs &&
+          monkeyPatchScrolling &&
+          typeof window !== 'undefined'
+        ) {
+          window.scrollTo(...this.scrollToArgs)
+          this.scrollToArgs = null
+        }
       }
-    })
+    )
   }
 
   onEntering = makeStateUpdater('entering').bind(this)
