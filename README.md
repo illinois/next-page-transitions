@@ -91,7 +91,7 @@ the page to initialize the "exit" transition, and will then apply the
 `page-transition-exit-active` class as well to begin the transition. This is
 very similar to how the
 [react-transition-group](https://github.com/reactjs/react-transition-group)
-library does things things. After the previous page has been animated out,
+library does things. After the previous page has been animated out,
 the new page is mounted and a similar pair of `.page-transition-enter` and
 `page-transition-enter-active` classes will be applied. This process repeats
 every time a new page is navigated to.
