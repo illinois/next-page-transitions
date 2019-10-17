@@ -86,6 +86,7 @@ class PageTransition extends React.Component {
       renderedChildren: children,
       showLoading: false,
     }
+    this.onChildLoaded = this.onChildLoaded.bind(this)
   }
 
   componentDidMount() {
@@ -273,7 +274,7 @@ class PageTransition extends React.Component {
           <Tag className={containerClassName}>
             {children &&
               React.cloneElement(children, {
-                [loadingCallbackName]: () => this.onChildLoaded(),
+                [loadingCallbackName]: this.onChildLoaded,
               })}
           </Tag>
         </Transition>
