@@ -3,7 +3,6 @@ import Link from 'next/link'
 
 class About extends React.PureComponent {
   render() {
-    console.log('About')
     return (
       <div className="container-fluid bg-success page">
         <h1>About us</h1>
