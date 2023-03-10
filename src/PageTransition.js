@@ -101,7 +101,13 @@ class PageTransition extends React.Component {
       this.originalScrollTo = window.scrollTo
       this.disableScrolling = false
       window.scrollTo = (...args) => {
-        if (this.disableScrolling) return
+        // If scrolling is disabled, capture the args passed to the scrollTo method
+        // in order to reapply these onEnter. See onEnter for more info about how
+        // this is used.
+        if (this.disableScrolling) {
+          this.scrollToArgs = args
+          return
+        }
         this.originalScrollTo.apply(window, args)
       }
     }
@@ -184,12 +190,32 @@ class PageTransition extends React.Component {
   }
 
   onEnter() {
+    const { monkeyPatchScrolling } = this.props
+
     // It's safe to reenable scrolling now
     this.disableScrolling = false
-    this.setState({
-      state: 'enter',
-      showLoading: false,
-    })
+    this.setState(
+      {
+        state: 'enter',
+        showLoading: false,
+      },
+      () => {
+        // When monkeyPatchScrolling is enabled, reapply the last args passed
+        // to window.scrollTo in order to make sure that the scroll position
+        // is reset before transition. This resolves an issue that primarily
+        // exists within mobile browsers, where the page would transition but
+        // the resulting scrolling position in the page that is being navigated
+        // to would be inconsistent.
+        if (
+          this.scrollToArgs &&
+          monkeyPatchScrolling &&
+          typeof window !== 'undefined'
+        ) {
+          window.scrollTo(...this.scrollToArgs)
+          this.scrollToArgs = null
+        }
+      }
+    )
   }
 
   onEntering = makeStateUpdater('entering').bind(this)
